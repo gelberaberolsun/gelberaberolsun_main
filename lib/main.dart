@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return Provider<Auth>(
       create: (context) => Auth(),
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'fbubbles'),
+        // theme: ThemeData(fontFamily: 'fbubbles'),
         title: 'Gel Beraber Olsun | ara, sözleş, ye! | 2021',
         debugShowCheckedModeBanner: false,
         home: ControlWidget(),
