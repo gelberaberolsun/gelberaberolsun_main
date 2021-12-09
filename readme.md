@@ -13,6 +13,9 @@ Gel Beraber Olsun, kafe ve restoran gibi yerlerde yalnız başına olmak istemey
 ![Profil](https://user-images.githubusercontent.com/94560965/145355988-6be58830-403c-4682-8ad8-0f393b1fdf1f.PNG)
 ![profil edit](https://user-images.githubusercontent.com/94560965/145356020-81066935-fe2a-44ef-b19a-f4d01d376f71.PNG)
 
+# Ekip Şeması
+![Ekip Şeması](https://user-images.githubusercontent.com/94560965/145356592-fc2302d4-44c0-4d05-bc89-a49d4db1de96.jpg)
+
 # Proje'de Görev Alanlar
 
 |Proje Ekibi            | Görevi                   |
