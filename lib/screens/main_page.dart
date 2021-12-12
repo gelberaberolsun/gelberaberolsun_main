@@ -1,9 +1,5 @@
-// ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_constructors_in_immutables, unused_local_variable
-
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/data/post_json.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -343,8 +339,7 @@ class MyColumn2 extends StatelessWidget {
   final String name, info, requestTime;
   final List<DocumentSnapshot> list;
 
-  MyColumn2({Key key, this.name, this.info, this.requestTime, this.list})
-      : super(key: key);
+  MyColumn2({this.name, this.info, this.requestTime, this.list});
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +381,7 @@ class MyColumn2 extends StatelessWidget {
                   ),
                   Container(
                     //width: double.infinity,
-                    height: 175,
+                    height: 182,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                     ),
