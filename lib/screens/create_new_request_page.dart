@@ -22,6 +22,9 @@ class _CreateRequestState extends State<CreateRequest> {
 
   @override
   Widget build(BuildContext context) {
+   
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -83,6 +86,7 @@ class _CreateRequestState extends State<CreateRequest> {
                   ),
                   SizedBox(height: 15),
                   MyTextFormField(
+                    limit: 80,
                     hintText: "Ek Bilgi",
                     controller: bilgiController,
                     prefixIcon: Icon(Icons.info),
@@ -110,11 +114,9 @@ class _CreateRequestState extends State<CreateRequest> {
                               .createRequest(map);
                           Navigator.pop(context);
                         } catch (e) {
-                          /*showDialog(context: context, builder: (context){
-                            return Center(child: Container(child: Text("Hata:$e"),),);
-                          });*/
+                          
                           print("hata:" + e);
-                          //burası çalışmadı
+                          
                         }
                       }
                     },
@@ -143,13 +145,15 @@ class MyTextFormField extends StatelessWidget {
   final String hintText;
   final Function onTap;
   final TextEditingController controller;
+  final limit;
 
   MyTextFormField(
-      {this.hintText, this.prefixIcon, this.onTap, this.controller});
+      {this.hintText, this.prefixIcon, this.onTap, this.controller,this.limit});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+     maxLength: limit,
       validator: (value) {
         if (value.isEmpty) {
           return "Bu Alan Boş Bırakılamaz.";

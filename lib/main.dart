@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/create_new_request_page.dart';
 import 'package:gelberaberolsun/screens/login_screen.dart';
 import 'package:gelberaberolsun/screens/profile_edit_page.dart';
-import 'package:gelberaberolsun/screens/profile_page.dart';
 import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/screens/signup_screen.dart';
 import 'package:gelberaberolsun/screens/main_page.dart';
@@ -13,6 +12,8 @@ import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:gelberaberolsun/widgets/control_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'screens/user_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           '/Signup': (context) => SignUp(),
           '/Main': (context) => const MainPage(),
           '/Request':(context)=>CreateRequest(),
-          '/Profile':(context)=>UserProfile(),
+          '/Profile':(context)=>UserProfilePage(),
           '/Profile Edit Page':(context)=>ProfileEdit(),
         },
       ),
