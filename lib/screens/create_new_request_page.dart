@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 import 'package:time_range_picker/time_range_picker.dart';

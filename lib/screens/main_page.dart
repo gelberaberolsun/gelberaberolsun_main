@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   int activeTab = 0;
   @override
   Widget build(BuildContext context) {
-    String a = Provider.of<Auth>(context).getCurrentUserName();
+    
 
     return Scaffold(
       bottomNavigationBar: Container(

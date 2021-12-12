@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, prefer_const_constructors_in_immutables
 
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
