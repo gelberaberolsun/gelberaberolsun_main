@@ -85,6 +85,9 @@ flutter:
       - family: fbubbles
         fonts:
             - asset: assets/fonts/fbubbles.ttf
+      - family: englebert
+        fonts:
+            - asset: assets/fonts/englebert.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

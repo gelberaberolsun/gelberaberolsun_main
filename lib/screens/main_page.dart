@@ -135,28 +135,31 @@ class _MainPageState extends State<MainPage> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 30,
         backgroundColor: Colors.white,
         title: Padding(
-          padding: const EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Gel Beraber Olsun',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 24,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
+              ),
+              SizedBox(
+                width: 160,
               ),
               IconButton(
                 onPressed: () {
                   //Bildirim ekranına gidecek.
                 },
                 icon: const Icon(
-                  Icons.notifications,
+                  Icons.notifications_active_outlined,
                   color: Colors.black,
                 ),
               ),
