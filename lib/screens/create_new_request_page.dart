@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, prefer_const_constructors, avoid_print, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -13,11 +15,11 @@ class CreateRequest extends StatefulWidget {
 
 class _CreateRequestState extends State<CreateRequest> {
   String dateRange = "";
-  TextEditingController dateController = new TextEditingController();
-  TextEditingController timeController = new TextEditingController();
-  TextEditingController sehirController = new TextEditingController();
-  TextEditingController ilceController = new TextEditingController();
-  TextEditingController bilgiController = new TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController sehirController = TextEditingController();
+  TextEditingController ilceController = TextEditingController();
+  TextEditingController bilgiController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override

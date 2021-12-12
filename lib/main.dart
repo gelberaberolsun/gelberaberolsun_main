@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/create_new_request_page.dart';
+import 'package:gelberaberolsun/screens/direct_message_main.dart';
 import 'package:gelberaberolsun/screens/login_screen.dart';
 import 'package:gelberaberolsun/screens/profile_edit_page.dart';
 import 'package:gelberaberolsun/screens/profile_page.dart';
@@ -27,17 +28,18 @@ class MyApp extends StatelessWidget {
     return Provider<Auth>(
       create: (context) => Auth(),
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'fbubbles'),
+        theme: ThemeData(fontFamily: 'englebert'),
         title: 'Gel Beraber Olsun | ara, sözleş, ye! | 2021',
         debugShowCheckedModeBanner: false,
         home: ControlWidget(),
         routes: {
+          '/DirectMessage': (context) => DirectMessage(),
           '/Login': (context) => LoginScreen(),
           '/Signup': (context) => SignUp(),
           '/Main': (context) => const MainPage(),
-          '/Request':(context)=>CreateRequest(),
-          '/Profile':(context)=>UserProfile(),
-          '/Profile Edit Page':(context)=>ProfileEdit(),
+          '/Request': (context) => CreateRequest(),
+          '/Profile': (context) => UserProfile(),
+          '/Profile Edit Page': (context) => ProfileEdit(),
         },
       ),
     );

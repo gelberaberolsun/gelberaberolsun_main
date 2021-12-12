@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, must_be_immutable, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_constructors, must_be_immutable, prefer_const_constructors_in_immutables, unused_import, await_only_futures
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,10 +80,10 @@ class SignUp extends StatelessWidget {
                         await Provider.of<Auth>(context, listen: false)
                             .createUserWithEmailAndPassword(
                                 emailController.text, passwordController.text);
-                        String uid =
-                            await Provider.of<Auth>(context, listen: false)
-                                .getCurrentUser()
-                                .uid;
+                        String uid = await Provider.of<Auth>(context,
+                                listen: false) //string not a future?
+                            .getCurrentUser()
+                            .uid;
                         await Provider.of<Auth>(context, listen: false)
                             .updateDisplayName(nameController.text);
 

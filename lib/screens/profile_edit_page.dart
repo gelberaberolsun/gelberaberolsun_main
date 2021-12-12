@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, prefer_const_constructors, await_only_futures, avoid_print, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,8 @@ class ProfileEdit extends StatelessWidget {
   TextEditingController nameCont = TextEditingController();
   TextEditingController ageCont = TextEditingController();
   TextEditingController meslekCont = TextEditingController();
+
+  ProfileEdit({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,21 +60,23 @@ class ProfileEdit extends StatelessWidget {
                       if (nameCont.text.isNotEmpty &&
                           ageCont.text.isNotEmpty &&
                           meslekCont.text.isNotEmpty) {
-                        Map<String,dynamic> map = {
+                        Map<String, dynamic> map = {
                           "name": nameCont.text,
                           "yas": ageCont.text,
                           "meslek": meslekCont.text
                         };
-                        User user= await Provider.of<Auth>(context, listen: false)
-                          .getCurrentUser();
-                          print("uid:${user.uid}");
-                        CollectionReference ref=Provider.of<Auth>(context, listen: false).getRef("Users");
+                        User user = await Provider.of<Auth>(context,
+                                listen: false) // user not a future?
+                            .getCurrentUser();
+                        print("uid:${user.uid}");
+                        CollectionReference ref =
+                            Provider.of<Auth>(context, listen: false)
+                                .getRef("Users");
                         await ref.doc(user.uid).update(map);
-                        
                       }
 
                       //Navigator.pushNamed(context, "/Profile");
-                     // Navigator.pushNamedAndRemoveUntil(context, "/Profile", (route) => false);
+                      // Navigator.pushNamedAndRemoveUntil(context, "/Profile", (route) => false);
                       Navigator.pop(context);
                     },
                     child: Text("Profili Güncelle"),

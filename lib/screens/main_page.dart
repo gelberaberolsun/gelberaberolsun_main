@@ -1,6 +1,9 @@
+// ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_constructors_in_immutables, unused_local_variable
+
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/data/post_json.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -14,12 +17,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  
   int activeTab = 0;
   @override
   Widget build(BuildContext context) {
-    String a=Provider.of<Auth>(context).getCurrentUserName();
-    
+    String a = Provider.of<Auth>(context).getCurrentUserName();
+
     return Scaffold(
       bottomNavigationBar: Container(
         width: double.infinity,
@@ -133,28 +135,31 @@ class _MainPageState extends State<MainPage> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 30,
         backgroundColor: Colors.white,
         title: Padding(
-          padding: const EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Gel Beraber Olsun',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 24,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
+              ),
+              SizedBox(
+                width: 160,
               ),
               IconButton(
                 onPressed: () {
                   //Bildirim ekranına gidecek.
                 },
                 icon: const Icon(
-                  Icons.notifications,
+                  Icons.notifications_active_outlined,
                   color: Colors.black,
                 ),
               ),
@@ -197,25 +202,23 @@ class _MainPageState extends State<MainPage> {
                 stream: Provider.of<Auth>(context, listen: false)
                     .getRequestListFromApi("request"),
                 builder: (context, snapshot) {
-                   if (snapshot.hasError) {
-                return Center(
-                  child: Text("Bir Hata Meydana Geldi"),
-                );
-              } else {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  QuerySnapshot data = snapshot.data;
-                  List<DocumentSnapshot> dataList=data.docs;
-                  
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("Bir Hata Meydana Geldi"),
+                    );
+                  } else {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      QuerySnapshot data = snapshot.data;
+                      List<DocumentSnapshot> dataList = data.docs;
 
-                  return MyColumn2(list: dataList);
-                }
-              }
+                      return MyColumn2(list: dataList);
+                    }
+                  }
                 }),
-            
           ],
         ),
       ),
@@ -337,11 +340,11 @@ class MyColumn extends StatelessWidget {
 }
 
 class MyColumn2 extends StatelessWidget {
-  final String name,info,requestTime;
+  final String name, info, requestTime;
   final List<DocumentSnapshot> list;
 
-  MyColumn2({this.name,this.info,this.requestTime,this.list});
-
+  MyColumn2({Key key, this.name, this.info, this.requestTime, this.list})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +352,7 @@ class MyColumn2 extends StatelessWidget {
       child: ListView.builder(
           itemCount: list.length,
           itemBuilder: (context, index) {
-            Map<String,dynamic> map=list[index].data();
+            Map<String, dynamic> map = list[index].data();
             return Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: Stack(
@@ -367,7 +370,8 @@ class MyColumn2 extends StatelessWidget {
                         ),
                       ],
                       image: DecorationImage(
-                          image: NetworkImage(postsList[Random().nextInt(6)]['postImg']),
+                          image: NetworkImage(
+                              postsList[Random().nextInt(6)]['postImg']),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -397,8 +401,8 @@ class MyColumn2 extends StatelessWidget {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(postsList[Random().nextInt(6)]['img']),
+                                    backgroundImage: NetworkImage(
+                                        postsList[Random().nextInt(6)]['img']),
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -440,13 +444,12 @@ class MyColumn2 extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              
                             ],
                           ),
                           const Icon(
-                                Icons.message,
-                                color: Colors.white,
-                              ),
+                            Icons.message,
+                            color: Colors.white,
+                          ),
                           Container(
                             decoration: BoxDecoration(
                                 color: Colors.grey.withOpacity(0.1),

@@ -1,8 +1,12 @@
+// ignore_for_file: avoid_print, sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 
 class UserProfile extends StatefulWidget {
+  const UserProfile({Key key}) : super(key: key);
+
   @override
   _UserProfileState createState() => _UserProfileState();
 }
@@ -12,18 +16,17 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // ignore: todo
+    //TODO: implement initState
     super.initState();
     Provider.of<Auth>(context, listen: false)
         .getDocument("Users")
         .then((value) {
-      meslek=value["meslek"];
+      meslek = value["meslek"];
       yas = value["yas"];
       print("meslek:$meslek    yas:$yas");
 
-      setState(() {
-              
-            });
+      setState(() {});
     });
   }
 
@@ -45,11 +48,11 @@ class _UserProfileState extends State<UserProfile> {
                 height: MediaQuery.of(context).size.height / 3,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  border: new Border.all(
+                  border: Border.all(
                       color: Colors.black,
                       width: 2.0,
                       style: BorderStyle.solid),
-                  gradient: new LinearGradient(
+                  gradient: LinearGradient(
                     colors: [Colors.red, Colors.cyan],
                   ),
                 ),
@@ -74,7 +77,6 @@ class _UserProfileState extends State<UserProfile> {
                       child: ElevatedButton(
                     onPressed: () async {
                       Navigator.pushNamed(context, "/Profile Edit Page");
-                      
                     },
                     child: Text(
                       "PROFİLİ GÜNCELLE",
@@ -98,9 +100,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Center(
-                    child: Text(meslek,
-                        style: TextStyle(fontSize: 15))),
+                Center(child: Text(meslek, style: TextStyle(fontSize: 15))),
                 SizedBox(height: 20),
                 Center(child: Text("Yaş-$yas", style: TextStyle(fontSize: 15)))
               ],

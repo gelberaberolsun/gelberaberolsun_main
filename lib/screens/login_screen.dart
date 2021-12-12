@@ -278,7 +278,7 @@ class SignInFormWidget extends StatelessWidget {
     @required this.passwordController,
   }) : _signInFormKey = signInFormKey;
 
-  final GlobalKey<FormState> _signInFormKey;
+  final GlobalKey<FormState> _signInFormKey; // validation
   final TextEditingController emailController;
   final TextEditingController passwordController;
 
