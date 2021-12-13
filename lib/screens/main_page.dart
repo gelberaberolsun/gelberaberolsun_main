@@ -1,8 +1,7 @@
-// ignore_for_file: avoid_print, prefer_const_constructors, prefer_const_constructors_in_immutables, unused_local_variable
-
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/data/post_json.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -40,7 +39,7 @@ class _MainPageState extends State<MainPage> {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
                 onTap: () {
@@ -51,37 +50,6 @@ class _MainPageState extends State<MainPage> {
                 },
                 child: const Icon(
                   Icons.home,
-                  size: 35,
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    activeTab = 1;
-                    //Mesajlaşma Kısmına gidecek.
-                    Navigator.pushNamed(context, '/Chat');
-                  });
-                },
-                child: const Icon(
-                  Icons.message,
-                  size: 35,
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    activeTab = 3;
-                    //Favoriler kısmına gidecek(Eğer yapmaya karar verirsek)
-                  });
-                },
-                child: const Icon(
-                  Icons.favorite,
                   size: 35,
                 ),
               ),
@@ -134,31 +102,28 @@ class _MainPageState extends State<MainPage> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        elevation: 30,
+        elevation: 0,
         backgroundColor: Colors.white,
         title: Padding(
-          padding: const EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Gel Beraber Olsun',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 18,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
-                textAlign: TextAlign.start,
-              ),
-              SizedBox(
-                width: 160,
+                textAlign: TextAlign.center,
               ),
               IconButton(
                 onPressed: () {
                   //Bildirim ekranına gidecek.
                 },
                 icon: const Icon(
-                  Icons.notifications_active_outlined,
+                  Icons.notifications,
                   color: Colors.black,
                 ),
               ),
@@ -184,13 +149,18 @@ class _MainPageState extends State<MainPage> {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Güncel İstekler",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Güncel İstekler",
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(icon: Icon(Icons.sort), onPressed: () {}),
+                  ],
                 ),
                 SizedBox(
                   height: 20,
@@ -225,253 +195,242 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class MyColumn extends StatelessWidget {
-  const MyColumn({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(postsList.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 175,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.25),
-                      spreadRadius: 2,
-                      blurRadius: 15,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
-                  image: DecorationImage(
-                      image: NetworkImage(postsList[index]['postImg']),
-                      fit: BoxFit.cover),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 175,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 175,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(postsList[index]['img']),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    postsList[index]['name'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(
-                                    postsList[index]['time'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          const Icon(
-                            Icons.message,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
-                                spreadRadius: 2,
-                                blurRadius: 15,
-                                offset: const Offset(0, 1),
-                              )
-                            ]),
-                        child: Text(
-                          postsList[index]['request'],
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
-    );
-  }
-}
-
 class MyColumn2 extends StatelessWidget {
   final String name, info, requestTime;
   final List<DocumentSnapshot> list;
 
-  MyColumn2({Key key, this.name, this.info, this.requestTime, this.list})
-      : super(key: key);
+  MyColumn2({this.name, this.info, this.requestTime, this.list});
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
           itemCount: list.length,
           itemBuilder: (context, index) {
+            ///Olusturulma tarihine göre sıralama işlemi.En son oluşturulan en üstte çıkacak.
+            list.sort((a, b) {
+              Map<String, dynamic> map1 = a.data();
+              Map<String, dynamic> map2 = b.data();
+
+              if ((map1["olusturma tarihi"]
+                      .compareTo(map2["olusturma tarihi"]) <
+                  0)) {
+                return 1;
+              } else {
+                return -1;
+              }
+            });
+
             Map<String, dynamic> map = list[index].data();
+            User user =
+                Provider.of<Auth>(context, listen: false).getCurrentUser();
             return Padding(
               padding: const EdgeInsets.only(bottom: 30),
-              child: Stack(
-                children: [
-                  Container(
-                    //width: double.infinity,
-                    height: 175,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.25),
-                          spreadRadius: 2,
-                          blurRadius: 15,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              postsList[Random().nextInt(6)]['postImg']),
-                          fit: BoxFit.cover),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  Container(
-                    //width: double.infinity,
-                    height: 175,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.25),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  Container(
-                    //width: double.infinity,
-                    height: 182,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        postsList[Random().nextInt(6)]['img']),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        map["isim"],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      const SizedBox(
-                                        height: 3,
-                                      ),
-                                      Text(
-                                        postsList[index]['time'],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 15),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        map["sehir"],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                      const SizedBox(
-                                        height: 3,
-                                      ),
-                                      Text(
-                                        map["ilce"],
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  )
+              child: GestureDetector(
+                onTap: () {
+                  print(map["isim"]);
+                },
+                onDoubleTap: () async {
+                  //silme işlemi için
+                  if (map["uid"] == user.uid) {
+                    showAlertDialog(context, () async {
+                      try {
+                        await Provider.of<Auth>(context, listen: false)
+                            .documentDelete(user.uid);
+
+                        Navigator.pop(context);
+                      } catch (e) {
+                        Navigator.pop(context);
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: Text(
+                                    "Bir Hata Meydana Geldi Lütfen Daha Sonra Tekrar Deneyin!"),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Anladım."))
                                 ],
-                              ),
-                            ],
-                          ),
-                          const Icon(
-                            Icons.message,
-                            color: Colors.white,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 2,
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 1),
-                                  )
-                                ]),
-                            child: Text(
-                              map["bilgi"],
-                              style: TextStyle(color: Colors.white),
-                            ),
+                              );
+                            });
+                      }
+                    });
+                    // await Provider.of<Auth>(context,listen: false).documentDelete(user.uid);
+                  }
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      //width: double.infinity,
+                      height: 175,
+                      decoration: BoxDecoration(
+                        border: map["uid"] == user.uid
+                            ? Border.all(color: Colors.yellow, width: 5)
+                            : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.25),
+                            spreadRadius: 2,
+                            blurRadius: 15,
+                            offset: const Offset(0, 1),
                           ),
                         ],
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                postsList[Random().nextInt(6)]['postImg']),
+                            fit: BoxFit.cover),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      //width: double.infinity,
+                      height: 175,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    Container(
+                      //width: double.infinity,
+                      height: 175,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          postsList[Random().nextInt(6)]
+                                              ['img']),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          map["isim"],
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                          postsList[index]['time'],
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(width: 15),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          map["sehir"],
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                          map["ilce"],
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const Icon(
+                              Icons.message,
+                              color: Colors.white,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      spreadRadius: 2,
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 1),
+                                    )
+                                  ]),
+                              child: Text(
+                                map["bilgi"],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           }),
     );
+  }
+
+  void showAlertDialog(context, Function deleteFunction) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Silme İşlemi"),
+            content: Text(
+                "Eğer Bu İşlemi Onaylarsanız Geri Alamazsınız.Onaylıyor musunuz?"),
+            actions: [
+              SizedBox(
+                  //width: MediaQuery.of(context).size.width / 2,
+                  child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      deleteFunction();
+                    },
+                    child: Text("Evet"),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(130, 30),
+                        elevation: 10,
+                        primary: Colors.black),
+                  ),
+                ],
+              )),
+              SizedBox(
+                  // width: MediaQuery.of(context).size.width / 2,
+                  child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Hayır"),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(130, 30),
+                        elevation: 10,
+                        primary: Colors.black),
+                  ),
+                ],
+              )),
+            ],
+          );
+        });
   }
 }

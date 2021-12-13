@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import, prefer_const_constructors, avoid_print, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
-
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -15,15 +13,18 @@ class CreateRequest extends StatefulWidget {
 
 class _CreateRequestState extends State<CreateRequest> {
   String dateRange = "";
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
-  TextEditingController sehirController = TextEditingController();
-  TextEditingController ilceController = TextEditingController();
-  TextEditingController bilgiController = TextEditingController();
+  TextEditingController dateController = new TextEditingController();
+  TextEditingController timeController = new TextEditingController();
+  TextEditingController sehirController = new TextEditingController();
+  TextEditingController ilceController = new TextEditingController();
+  TextEditingController bilgiController = new TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+   
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -85,6 +86,7 @@ class _CreateRequestState extends State<CreateRequest> {
                   ),
                   SizedBox(height: 15),
                   MyTextFormField(
+                    limit: 80,
                     hintText: "Ek Bilgi",
                     controller: bilgiController,
                     prefixIcon: Icon(Icons.info),
@@ -112,11 +114,9 @@ class _CreateRequestState extends State<CreateRequest> {
                               .createRequest(map);
                           Navigator.pop(context);
                         } catch (e) {
-                          /*showDialog(context: context, builder: (context){
-                            return Center(child: Container(child: Text("Hata:$e"),),);
-                          });*/
+                          
                           print("hata:" + e);
-                          //burası çalışmadı
+                          
                         }
                       }
                     },
@@ -145,13 +145,15 @@ class MyTextFormField extends StatelessWidget {
   final String hintText;
   final Function onTap;
   final TextEditingController controller;
+  final limit;
 
   MyTextFormField(
-      {this.hintText, this.prefixIcon, this.onTap, this.controller});
+      {this.hintText, this.prefixIcon, this.onTap, this.controller,this.limit});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+     maxLength: limit,
       validator: (value) {
         if (value.isEmpty) {
           return "Bu Alan Boş Bırakılamaz.";

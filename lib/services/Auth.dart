@@ -48,6 +48,12 @@ class Auth {
     var allRequestsRef = _firebaseFirestore.collection("request");
     await allRequestsRef.doc(getCurrentUser().uid).set(map);
   }
+  Future<void> rateTheUser(Map<String, dynamic> map){
+    User user = _firebaseAuth.currentUser;
+    var ratingsCollectionRef = _firebaseFirestore.collection("Users").doc(user.uid).collection("ratings");
+    
+
+  }
 
   void createUser(Map<String, dynamic> map)async{
     var usersCollectionRef = _firebaseFirestore.collection("Users");
@@ -68,6 +74,10 @@ class Auth {
    return snapshot;
   
 
+ }
+
+ Future<void> documentDelete(String uid)async{
+   await _firebaseFirestore.collection("request").doc(uid).delete();
  }
 
   
