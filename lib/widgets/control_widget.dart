@@ -23,7 +23,7 @@ class _ControlWidgetState extends State<ControlWidget> {
         if (snapshot.connectionState == ConnectionState.active) {
           return snapshot.data != null ? const MainPage() : LoginScreen();
         } else {
-          return const Center(child: CircularProgressIndicator()); // ? -baran-
+          return const Center(child: CircularProgressIndicator());
         }
       },
       stream: Provider.of<Auth>(context, listen: false).authStateChanges(),
