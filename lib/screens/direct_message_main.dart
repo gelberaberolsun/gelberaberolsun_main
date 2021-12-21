@@ -24,7 +24,7 @@ class DirectMessage extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
-            leading: Icon(Icons.arrow_back_ios_new_rounded,
+            leading: Icon(Icons.arrow_back,
                 color: Colors.black, size: 20),
 
             /*Text('user_name',
@@ -187,7 +187,7 @@ class _MeetAgainState extends State<MeetAgain> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.dining_outlined, color: Colors.indigo, size: 30),
+          Icon(Icons.local_dining, color: Colors.indigo, size: 30),
           SizedBox(
             width: 10,
           ),

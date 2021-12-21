@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/data/post_json.dart';
+import 'package:gelberaberolsun/screens/denemeNotificationPage.dart';
+import 'package:gelberaberolsun/screens/direct_message_main.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key key}) : super(key: key);
@@ -15,6 +19,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  void initState() {
+    super.initState();
+  }
+
   int activeTab = 0;
   @override
   Widget build(BuildContext context) {
@@ -52,6 +60,22 @@ class _MainPageState extends State<MainPage> {
                   Icons.home,
                   size: 35,
                 ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.message,
+                  size: 35,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotificationPage()));
+                },
               ),
               const SizedBox(
                 width: 10,
@@ -171,22 +195,33 @@ class _MainPageState extends State<MainPage> {
                 stream: Provider.of<Auth>(context, listen: false)
                     .getRequestListFromApi("request"),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text("Bir Hata Meydana Geldi"),
-                    );
-                  } else {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      QuerySnapshot data = snapshot.data;
-                      List<DocumentSnapshot> dataList = data.docs;
+                  return StreamBuilder(
+                      stream: Provider.of<Auth>(context, listen: false)
+                          .getUserListFromApi("Users"),
+                      builder: (context, snapshot2) {
+                        if (snapshot.hasError && snapshot2.hasError) {
+                          return Center(
+                            child: Text("Bir Hata Meydana Geldi"),
+                          );
+                        } else {
+                          if (!snapshot.hasData || !snapshot2.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            QuerySnapshot requestData = snapshot.data;
+                            List<DocumentSnapshot> requestdataList =
+                                requestData.docs;
 
-                      return MyColumn2(list: dataList);
-                    }
-                  }
+                            QuerySnapshot userData = snapshot2.data;
+                            List<DocumentSnapshot> userDataList = userData.docs;
+
+                            return MyColumn2(
+                                requestList: requestdataList,
+                                userList: userDataList);
+                          }
+                        }
+                      });
                 }),
           ],
         ),
@@ -197,18 +232,25 @@ class _MainPageState extends State<MainPage> {
 
 class MyColumn2 extends StatelessWidget {
   final String name, info, requestTime;
-  final List<DocumentSnapshot> list;
+  final List<DocumentSnapshot> requestList;
+  final List<DocumentSnapshot> userList;
+  double rate = 3.75;
 
-  MyColumn2({this.name, this.info, this.requestTime, this.list});
+  MyColumn2(
+      {this.name,
+      this.info,
+      this.requestTime,
+      this.requestList,
+      this.userList});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-          itemCount: list.length,
+          itemCount: requestList.length,
           itemBuilder: (context, index) {
             ///Olusturulma tarihine göre sıralama işlemi.En son oluşturulan en üstte çıkacak.
-            list.sort((a, b) {
+            requestList.sort((a, b) {
               Map<String, dynamic> map1 = a.data();
               Map<String, dynamic> map2 = b.data();
 
@@ -220,19 +262,62 @@ class MyColumn2 extends StatelessWidget {
                 return -1;
               }
             });
+            /*userList.sort((a, b) {
+              Map<String, dynamic> map1 = a.data();
+              Map<String, dynamic> map2 = b.data();
 
-            Map<String, dynamic> map = list[index].data();
+              if ((map1["olusturma tarihi"]
+                      .compareTo(map2["olusturma tarihi"]) <
+                  0)) {
+                return 1;
+              } else {
+                return -1;
+              }
+            });*/
+
+            Map<String, dynamic> requetsMap = requestList[index].data();
+            String uid = requetsMap["uid"];
+            String requestCreaterName = requetsMap["name"];
+
+            Map<String, dynamic> usersMap = userList[index].data();
+            // String photoURL = "";
+
+            // //Provider.of<Auth>(context,listen: false).getUserPhotoByUid(uid,photoURL).toString();
+
+            // for (var i = 0; i < userList.length; i++) {
+            //   Map<String, dynamic> usersMap = userList[i].data();
+            //   if (usersMap["id"] == uid) {
+            //     photoURL = usersMap["photoUrl"];
+            //     //break;
+            //   }
+            // }
+
             User user =
                 Provider.of<Auth>(context, listen: false).getCurrentUser();
             return Padding(
               padding: const EdgeInsets.only(bottom: 30),
               child: GestureDetector(
                 onTap: () {
-                  print(map["isim"]);
+                  print(requetsMap["isim"]);
                 },
+
+                ///onDoubleTap yapınca istek gönderme işlemi yapılsın.
                 onDoubleTap: () async {
+                  if (requetsMap["uid"] != user.uid) {
+                    showAlertDialog(context, () async {
+                      await Provider.of<Auth>(context, listen: false)
+                          .sendRequestNotificationToUser(uid);
+
+                      Navigator.pop(context);
+                    },
+                        Text("İstek Gönderme"),
+                        Text(
+                            "Bu kişiye istek göndermek istediğinize emin misiniz?"));
+                  }
+                },
+                onLongPress: () async {
                   //silme işlemi için
-                  if (map["uid"] == user.uid) {
+                  if (requetsMap["uid"] == user.uid) {
                     showAlertDialog(context, () async {
                       try {
                         await Provider.of<Auth>(context, listen: false)
@@ -257,7 +342,10 @@ class MyColumn2 extends StatelessWidget {
                               );
                             });
                       }
-                    });
+                    },
+                        Text("Silme İşlemi"),
+                        Text(
+                            "Bu işlemi onaylarsanız geri alamazsınız.Silmek istediğinize emin misiniz?"));
                     // await Provider.of<Auth>(context,listen: false).documentDelete(user.uid);
                   }
                 },
@@ -267,7 +355,7 @@ class MyColumn2 extends StatelessWidget {
                       //width: double.infinity,
                       height: 175,
                       decoration: BoxDecoration(
-                        border: map["uid"] == user.uid
+                        border: requetsMap["uid"] == user.uid
                             ? Border.all(color: Colors.yellow, width: 5)
                             : null,
                         boxShadow: [
@@ -310,17 +398,18 @@ class MyColumn2 extends StatelessWidget {
                                 Row(
                                   children: [
                                     CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          postsList[Random().nextInt(6)]
-                                              ['img']),
-                                    ),
+                                        // backgroundImage:
+                                        //     usersMap["photoUrl"] != null
+                                        //         ? FileImage(File(photoURL))
+                                        //         : null,
+                                        ),
                                     const SizedBox(
                                       width: 10,
                                     ),
                                     Column(
                                       children: [
                                         Text(
-                                          map["isim"],
+                                          requetsMap["isim"],
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
@@ -338,7 +427,7 @@ class MyColumn2 extends StatelessWidget {
                                     Column(
                                       children: [
                                         Text(
-                                          map["sehir"],
+                                          requetsMap["sehir"],
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
@@ -346,7 +435,7 @@ class MyColumn2 extends StatelessWidget {
                                           height: 3,
                                         ),
                                         Text(
-                                          map["ilce"],
+                                          requetsMap["ilce"],
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
@@ -356,9 +445,37 @@ class MyColumn2 extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Icon(
-                              Icons.message,
-                              color: Colors.white,
+                            Row(
+                              children: [
+                                SmoothStarRating(
+                                  isReadOnly: true,
+                                  allowHalfRating: true,
+                                  rating: rate,
+                                  starCount: 5,
+                                  size: 25,
+                                  color: Colors.amber,
+                                  borderColor: Colors.amber,
+                                  spacing: 0,
+                                ),
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.message,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      ///Mesaj sayfasına yönlendiren kod
+                                      /*if (requetsMap["uid"] != user.uid) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ChatPage(
+                                                      kullaniciName:
+                                                          usersMap["name"],
+                                                      uid: usersMap["id"],
+                                                    )));
+                                      }*/
+                                    }),
+                              ],
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -372,7 +489,7 @@ class MyColumn2 extends StatelessWidget {
                                     )
                                   ]),
                               child: Text(
-                                map["bilgi"],
+                                requetsMap["bilgi"],
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -388,14 +505,13 @@ class MyColumn2 extends StatelessWidget {
     );
   }
 
-  void showAlertDialog(context, Function deleteFunction) {
+  void showAlertDialog(context, Function function, Text title, Text content) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Silme İşlemi"),
-            content: Text(
-                "Eğer Bu İşlemi Onaylarsanız Geri Alamazsınız.Onaylıyor musunuz?"),
+            title: title,
+            content: content,
             actions: [
               SizedBox(
                   //width: MediaQuery.of(context).size.width / 2,
@@ -403,7 +519,7 @@ class MyColumn2 extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      deleteFunction();
+                      function();
                     },
                     child: Text("Evet"),
                     style: ElevatedButton.styleFrom(

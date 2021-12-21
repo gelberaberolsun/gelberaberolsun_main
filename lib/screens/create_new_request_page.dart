@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
@@ -22,9 +23,6 @@ class _CreateRequestState extends State<CreateRequest> {
 
   @override
   Widget build(BuildContext context) {
-   
-
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -108,15 +106,31 @@ class _CreateRequestState extends State<CreateRequest> {
                         "olusturma tarihi": DateTime.now(),
                       };
 
+                      var map2 = {"olusturma tarihi": DateTime.now()};
+
                       if (formKey.currentState.validate()) {
                         try {
                           await Provider.of<Auth>(context, listen: false)
                               .createRequest(map);
-                          Navigator.pop(context);
+
+                          CollectionReference ref =
+                              Provider.of<Auth>(context, listen: false)
+                                  .getRef("Users");
+                          await ref
+                              .doc(Provider.of<Auth>(context, listen: false)
+                                  .getCurrentUser()
+                                  .uid)
+                              .update(map2);
+
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/Main', (Route<dynamic> route) => false);
+
+                          ///push mainPage and clear navigation stack
+
+                          //Navigator.pop(context);
+
                         } catch (e) {
-                          
                           print("hata:" + e);
-                          
                         }
                       }
                     },
@@ -148,12 +162,16 @@ class MyTextFormField extends StatelessWidget {
   final limit;
 
   MyTextFormField(
-      {this.hintText, this.prefixIcon, this.onTap, this.controller,this.limit});
+      {this.hintText,
+      this.prefixIcon,
+      this.onTap,
+      this.controller,
+      this.limit});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-     maxLength: limit,
+      maxLength: limit,
       validator: (value) {
         if (value.isEmpty) {
           return "Bu Alan Boş Bırakılamaz.";

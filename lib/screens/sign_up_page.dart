@@ -92,7 +92,9 @@ class SignUp extends StatelessWidget {
                           "name": nameController.text,
                           "id": uid,
                           "yas": ageController.text,
-                          "meslek": meslekController.text
+                          "meslek": meslekController.text,
+                          "bio":"",
+                          "olusturma tarihi": DateTime.now(),
                         });
 
                         Navigator.pop(context);
