@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
@@ -13,6 +18,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   String yas = "", meslek = "";
 
   String bio = "";
+  double rate = 0;
+  String imageString = "";
+  var image;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -34,6 +43,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<Auth>(context).getCurrentUser();
+    print(user.photoURL);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -76,20 +87,58 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-                        ),
-                        radius: 50.0,
+                      Stack(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              try {
+                                XFile imageX = await _picker.pickImage(
+                                    source: ImageSource.gallery,
+                                    imageQuality: 50);
+                                setState(() async {
+                                  user.updatePhotoURL(imageX.path);
+                                  print("url${user.photoURL}");
+                                  image = File(imageX.path);
+                                  Map<String, dynamic> map = {
+                                    "photoUrl": imageX.path
+                                  };
+                                  print("path:${imageX.path}");
+
+                                  CollectionReference ref =
+                                      Provider.of<Auth>(context, listen: false)
+                                          .getRef("Users");
+                                  await ref.doc(user.uid).update(map);
+                                });
+                              } catch (e) {
+                                print("e:$e");
+                              }
+                            },
+                            child: CircleAvatar(
+                              backgroundImage: user.photoURL == null
+                                  ? null
+                                  : FileImage(File(
+                                      user.photoURL)),
+                              radius: 50.0,
+                            ),
+                          ),
+                          Positioned(
+                            child: Icon(Icons.edit),
+                            bottom: 0,
+                            right: 30,
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
                       Card(
                         child: SmoothStarRating(
+                          rating: rate,
                           allowHalfRating: true,
                           onRated: (rating) {
+                            rate = rating;
                             print("RATİNH:$rating");
+                            print("RATe:$rate");
                           },
                           starCount: 5,
                           size: 50,

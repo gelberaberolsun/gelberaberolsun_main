@@ -73,7 +73,6 @@ class ProfileEdit extends StatelessWidget {
                           User user =
                               await Provider.of<Auth>(context, listen: false)
                                   .getCurrentUser();
-                          print("uid:${user.uid}");
                           CollectionReference ref =
                               Provider.of<Auth>(context, listen: false)
                                   .getRef("Users");
