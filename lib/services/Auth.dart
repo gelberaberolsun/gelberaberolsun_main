@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_if_null_operators
+// ignore_for_file: file_names, prefer_if_null_operators, missing_return, unused_local_variable, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -168,9 +168,9 @@ class Auth {
         .snapshots();
   }
 
-///onaylanan requesti kaydetme işlemi
-  void saveConfirmedRequest(String uid1, String name,String uid2) async{
-  await  _firebaseFirestore
+  ///onaylanan requesti kaydetme işlemi
+  void saveConfirmedRequest(String uid1, String name, String uid2) async {
+    await _firebaseFirestore
         .collection("Users")
         .doc(uid1)
         .collection("confirmedRequests")
@@ -181,5 +181,14 @@ class Auth {
         })
         .then((value) => print("Successs"))
         .onError((error, stackTrace) => print("error:$error"));
+  }
+
+  ///onaylanmış requestleri db'den çeken method
+  Stream<QuerySnapshot> getConfirmedRequests() {
+    return _firebaseFirestore
+        .collection("Users")
+        .doc(getCurrentUser().uid)
+        .collection("confirmedRequests")
+        .snapshots();
   }
 }

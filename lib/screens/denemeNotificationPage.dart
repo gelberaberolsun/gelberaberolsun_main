@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors, prefer_adjacent_string_concatenation, duplicate_ignore, await_only_futures, file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gelberaberolsun/screens/confirmedRequestPage.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +20,19 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.black45,
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ConfirmedRequest()));
+            },
+            child: Text(
+              "Onaylanmış Bildirimler İçin Tıklayın",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
         appBar: AppBar(
           actions: [
             IconButton(
@@ -37,6 +53,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 })
           ],
           backgroundColor: Colors.black,
+          // ignore: prefer_const_constructors
           title: Text("Notifications"),
         ),
         body: StreamBuilder(
@@ -60,7 +77,8 @@ class _NotificationPageState extends State<NotificationPage> {
                   return ListView.builder(
                       itemCount: notificationDataList.length,
                       itemBuilder: (context, index) {
-                        User user=Provider.of<Auth>(context,listen: false).getCurrentUser();
+                        User user = Provider.of<Auth>(context, listen: false)
+                            .getCurrentUser();
                         Map<String, dynamic> map =
                             notificationDataList[index].data();
                         return GestureDetector(
@@ -76,9 +94,17 @@ class _NotificationPageState extends State<NotificationPage> {
                                               isConfirmed: true);
                                       istekControl = true;
 
-                                    await Provider.of<Auth>(context,listen: false).saveConfirmedRequest(map["senderId"], user.displayName,user.uid);
-                                    await Provider.of<Auth>(context,listen: false).saveConfirmedRequest(user.uid, map["senderName"],map["senderId"]);
-  
+                                      await Provider.of<Auth>(context,
+                                              listen: false)
+                                          .saveConfirmedRequest(map["senderId"],
+                                              user.displayName, user.uid);
+                                      await Provider.of<Auth>(context,
+                                              listen: false)
+                                          .saveConfirmedRequest(
+                                              user.uid,
+                                              map["senderName"],
+                                              map["senderId"]);
+
                                       for (var i = 0;
                                           i < notificationDataList.length;
                                           i++) {
@@ -92,7 +118,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   map2["senderId"]);
                                         }
                                       }
-                                      await Provider.of<Auth>(context, listen: false)
+                                      await Provider.of<Auth>(context,
+                                              listen: false)
                                           .documentDelete(Provider.of<Auth>(
                                                   context,
                                                   listen: false)
@@ -162,7 +189,6 @@ class _NotificationPageState extends State<NotificationPage> {
                 ],
               )),
               SizedBox(
-                  
                   child: Row(
                 children: [
                   ElevatedButton(

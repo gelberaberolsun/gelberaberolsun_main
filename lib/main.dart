@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return Provider<Auth>(
       create: (context) => Auth(),
       child: MaterialApp(
-        theme: ThemeData(fontFamily: 'fbubbles'),
+        theme: ThemeData(fontFamily: 'englebert'),
         title: 'Gel Beraber Olsun | ara, sözleş, ye! | 2021',
         debugShowCheckedModeBanner: false,
         home: ControlWidget(),
@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
           '/Login': (context) => LoginScreen(),
           '/Signup': (context) => SignUp(),
           '/Main': (context) => const MainPage(),
-          '/Request':(context)=>CreateRequest(),
-          '/Profile':(context)=>UserProfilePage(),
-          '/Profile Edit Page':(context)=>ProfileEdit(),
+          '/Request': (context) => CreateRequest(),
+          '/Profile': (context) => UserProfilePage(),
+          '/Profile Edit Page': (context) => ProfileEdit(),
         },
       ),
     );

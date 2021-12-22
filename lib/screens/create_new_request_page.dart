@@ -1,6 +1,7 @@
+// ignore_for_file: prefer_const_constructors, duplicate_ignore, avoid_print, prefer_typing_uninitialized_variables, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gelberaberolsun/screens/sign_up_page.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 import 'package:time_range_picker/time_range_picker.dart';
@@ -14,11 +15,11 @@ class CreateRequest extends StatefulWidget {
 
 class _CreateRequestState extends State<CreateRequest> {
   String dateRange = "";
-  TextEditingController dateController = new TextEditingController();
-  TextEditingController timeController = new TextEditingController();
-  TextEditingController sehirController = new TextEditingController();
-  TextEditingController ilceController = new TextEditingController();
-  TextEditingController bilgiController = new TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController sehirController = TextEditingController();
+  TextEditingController ilceController = TextEditingController();
+  TextEditingController bilgiController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -26,6 +27,7 @@ class _CreateRequestState extends State<CreateRequest> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        // ignore: prefer_const_constructors
         title: Text("İstek Oluştur"),
         centerTitle: true,
       ),
@@ -41,18 +43,23 @@ class _CreateRequestState extends State<CreateRequest> {
                 children: [
                   MyTextFormField(
                     controller: sehirController,
+                    // ignore: prefer_const_constructors
                     prefixIcon: Icon(Icons.location_city),
                     hintText: "Şehir",
                   ),
+                  // ignore: prefer_const_constructors
                   SizedBox(height: 15),
                   MyTextFormField(
                     controller: ilceController,
+                    // ignore: prefer_const_constructors
                     prefixIcon: Icon(Icons.location_on),
                     hintText: "İlçe",
                   ),
+                  // ignore: prefer_const_constructors
                   SizedBox(height: 15),
                   MyTextFormField(
                     controller: dateController,
+                    // ignore: prefer_const_constructors
                     prefixIcon: Icon(Icons.date_range),
                     hintText: "Tarih",
                     onTap: () async {
@@ -66,9 +73,11 @@ class _CreateRequestState extends State<CreateRequest> {
                       dateController.text = date;
                     },
                   ),
+                  // ignore: prefer_const_constructors
                   SizedBox(height: 15),
                   MyTextFormField(
                     controller: timeController,
+                    // ignore: prefer_const_constructors
                     prefixIcon: Icon(Icons.timelapse),
                     hintText: "Saat",
                     onTap: () async {
@@ -82,6 +91,7 @@ class _CreateRequestState extends State<CreateRequest> {
                       timeController.text = time;
                     },
                   ),
+                  // ignore: prefer_const_constructors
                   SizedBox(height: 15),
                   MyTextFormField(
                     limit: 80,

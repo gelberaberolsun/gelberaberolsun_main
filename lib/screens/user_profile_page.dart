@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_typing_uninitialized_variables, avoid_print, prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unnecessary_string_interpolations, avoid_unnecessary_containers
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +18,6 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePageState extends State<UserProfilePage> {
   String yas = "", meslek = "";
-
   String bio = "";
   double rate = 0;
   String imageString = "";
@@ -97,7 +98,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     imageQuality: 50);
                                 setState(() async {
                                   user.updatePhotoURL(imageX.path);
-                                  print("url${user.photoURL}");
+
                                   image = File(imageX.path);
                                   Map<String, dynamic> map = {
                                     "photoUrl": imageX.path
@@ -108,6 +109,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       Provider.of<Auth>(context, listen: false)
                                           .getRef("Users");
                                   await ref.doc(user.uid).update(map);
+                                  await user.updatePhotoURL(imageX.path);
                                 });
                               } catch (e) {
                                 print("e:$e");
@@ -116,8 +118,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             child: CircleAvatar(
                               backgroundImage: user.photoURL == null
                                   ? null
-                                  : FileImage(File(
-                                      user.photoURL)),
+                                  : FileImage(File(user.photoURL)),
                               radius: 50.0,
                             ),
                           ),
