@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, must_be_immutable, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_constructors, must_be_immutable, prefer_const_constructors_in_immutables, await_only_futures
 
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +22,10 @@ class SignUp extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          'Create Account',
-          style: TextStyle(color: Colors.white),
+          'Hesap Oluştur',
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
       ),
@@ -34,81 +35,127 @@ class SignUp extends StatelessWidget {
           child: SingleChildScrollView(
             child: Form(
               key: _signUpKey,
-              child: Column(
-                children: [
-                  Text(
-                    'Create Account',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                    controller: nameController,
-                    label: "Full Name",
-                  ),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                    inputType: TextInputType.emailAddress,
-                    label: "Email Adress",
-                    controller: emailController,
-                  ),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                    label: "Meslek",
-                    controller: meslekController,
-                  ),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                    label: "Yaş",
-                    controller: ageController,
-                  ),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                      inputType: TextInputType.visiblePassword,
-                      label: "Password",
-                      controller: passwordController),
-                  SizedBox(height: 20),
-                  MyTextFormField(
-                    label: "Password Again",
-                    controller: passwordAgainController,
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_signUpKey.currentState.validate() &&
-                          passwordController.text ==
-                              passwordAgainController.text) {
-                        await Provider.of<Auth>(context, listen: false)
-                            .createUserWithEmailAndPassword(
-                                emailController.text, passwordController.text);
-                        String uid =
-                            await Provider.of<Auth>(context, listen: false)
-                                .getCurrentUser()
-                                .uid;
-                        await Provider.of<Auth>(context, listen: false)
-                            .updateDisplayName(nameController.text);
+              child: Padding(
+                padding: const EdgeInsets.only(left: 50, right: 50),
+                child: Column(
+                  children: [
+                    Text(
+                      'Hesap Oluştur',
+                      style: TextStyle(fontSize: 30),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                        controller: nameController,
+                        label: "İsim Soyisim",
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                        inputType: TextInputType.emailAddress,
+                        label: "E-posta",
+                        controller: emailController,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                        label: "Meslek",
+                        controller: meslekController,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                        label: "Yaş",
+                        controller: ageController,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                          inputType: TextInputType.visiblePassword,
+                          label: "Şifre",
+                          controller: passwordController),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      shadowColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 20,
+                      color: Colors.white54,
+                      child: MyTextFormField(
+                        label: "Şifre Tekrar",
+                        controller: passwordAgainController,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_signUpKey.currentState.validate() &&
+                            passwordController.text ==
+                                passwordAgainController.text) {
+                          await Provider.of<Auth>(context, listen: false)
+                              .createUserWithEmailAndPassword(
+                                  emailController.text,
+                                  passwordController.text);
+                          String uid =
+                              await Provider.of<Auth>(context, listen: false)
+                                  .getCurrentUser()
+                                  .uid;
+                          await Provider.of<Auth>(context, listen: false)
+                              .updateDisplayName(nameController.text);
 
-                        await Provider.of<Auth>(context, listen: false)
-                            .createUser({
-                          "name": nameController.text,
-                          "id": uid,
-                          "yas": ageController.text,
-                          "meslek": meslekController.text,
-                          "bio":"",
-                          "olusturma tarihi": DateTime.now(),
-                        });
+                          await Provider.of<Auth>(context, listen: false)
+                              .createUser({
+                            "name": nameController.text,
+                            "id": uid,
+                            "yas": ageController.text,
+                            "meslek": meslekController.text,
+                            "bio": "",
+                            "olusturma tarihi": DateTime.now(),
+                          });
 
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: Text('SIGN UP'),
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.black,
-                        minimumSize: Size(350, 50),
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25))),
-                  )
-                ],
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text('Kayıt Ol'),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black,
+                          minimumSize: Size(350, 50),
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25))),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

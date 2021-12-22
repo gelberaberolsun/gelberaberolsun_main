@@ -24,8 +24,7 @@ class DirectMessage extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
-            leading: Icon(Icons.arrow_back,
-                color: Colors.black, size: 20),
+            leading: Icon(Icons.arrow_back, color: Colors.black, size: 20),
 
             /*Text('user_name',
                             style: TextStyle(
@@ -108,7 +107,7 @@ class _DirectMessageBodyState extends State<DirectMessageBody> {
               padding: const EdgeInsets.all(6.0),
               child: ListTile(
                 onTap: () => Navigator.pushNamed(context, '/IndividualDm'),
-                title: Text('Burçak',
+                title: Text('Kaan Mehmet',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text('5 dakika önce aktifti'),
                 leading: CircleAvatar(
@@ -142,9 +141,9 @@ class _DirectMessageBodyState extends State<DirectMessageBody> {
               padding: const EdgeInsets.all(6.0),
               child: ListTile(
                 onTap: () => Navigator.pushNamed(context, '/IndividualDm'),
-                title: Text('Recep Tayyip Erdoğan',
+                title: Text('Mehmet Kaan',
                     style: TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text("2023'ten önce aktifti"),
+                subtitle: Text("Şu an aktif"),
                 leading: CircleAvatar(
                   backgroundColor: Colors.purple,
                   //child: Image.asset('assets/images/ppId_$ppId'),

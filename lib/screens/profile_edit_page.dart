@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors, must_be_immutable, prefer_const_constructors, await_only_futures, prefer_const_constructors_in_immutables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,29 +61,8 @@ class ProfileEdit extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: ElevatedButton(
                       onPressed: () async {
-                        await Provider.of<Auth>(context, listen: false)
-                            .updateDisplayName(nameCont.text);
-                        if (nameCont.text.isNotEmpty &&
-                            ageCont.text.isNotEmpty &&
-                            meslekCont.text.isNotEmpty) {
-                          Map<String, dynamic> map = {
-                            "name": nameCont.text,
-                            "yas": ageCont.text,
-                            "meslek": meslekCont.text,
-                            "bio":bioCont.text
-                          };
-                          User user =
-                              await Provider.of<Auth>(context, listen: false)
-                                  .getCurrentUser();
-                          CollectionReference ref =
-                              Provider.of<Auth>(context, listen: false)
-                                  .getRef("Users");
-                          await ref.doc(user.uid).update(map);
-                        }
+                        await saveEditedProfileMethod(context);
 
-                        
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/Main', (Route<dynamic> route) => false);
                         ///push mainPage and clear navigation stack
                       },
                       child: Text("Profili Güncelle"),
@@ -97,6 +78,31 @@ class ProfileEdit extends StatelessWidget {
       ),
     );
   }
+
+  Future saveEditedProfileMethod(BuildContext context) async {
+    await Provider.of<Auth>(context, listen: false)
+        .updateDisplayName(nameCont.text);
+    if (nameCont.text.isNotEmpty &&
+        ageCont.text.isNotEmpty &&
+        meslekCont.text.isNotEmpty) {
+      Map<String, dynamic> map = {
+        "name": nameCont.text,
+        "yas": ageCont.text,
+        "meslek": meslekCont.text,
+        "bio": bioCont.text
+      };
+      User user =
+          await Provider.of<Auth>(context, listen: false).getCurrentUser();
+      CollectionReference ref =
+          Provider.of<Auth>(context, listen: false).getRef("Users");
+      await ref.doc(user.uid).update(map);
+    }
+
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/Main', (Route<dynamic> route) => false);
+
+    ///push mainPage and clear navigation stack
+  }
 }
 
 class MyTextFormField extends StatelessWidget {
@@ -105,7 +111,8 @@ class MyTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final int maxLine;
 
-  MyTextFormField({this.hintText, this.prefixIcon, this.controller,this.maxLine});
+  MyTextFormField(
+      {this.hintText, this.prefixIcon, this.controller, this.maxLine});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +120,6 @@ class MyTextFormField extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         maxLines: maxLine,
-        
         controller: controller,
         decoration: InputDecoration(
             hintText: hintText,

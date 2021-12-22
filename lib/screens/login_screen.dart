@@ -1,5 +1,7 @@
 // ignore_for_file: unused_import, avoid_print, use_key_in_widget_constructors, prefer_const_constructors
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/screens/signup_screen.dart';
 import 'package:email_validator/email_validator.dart';
@@ -66,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget actionButtons() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         ElevatedButton(
           onPressed: () async {
@@ -84,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: const Text('Giriş Yap'),
         ),
         const SizedBox(
-          width: 100.0,
+          width: 100,
         ),
         ElevatedButton(
           onPressed: () {
@@ -105,13 +108,16 @@ class _LoginScreenState extends State<LoginScreen> {
             value: isChecked,
             onChanged: (value) {
               setState(() {
-                //isChecked = value!;
+                isChecked = value;
               });
             }),
         const Text(
           "Beni Hatırla",
           style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
+              letterSpacing: 1,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 15.0),
         )
       ],
     );
@@ -199,6 +205,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: <Widget>[
           Container(
+            child: BackdropFilter(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0),
+                ),
+              ),
+              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            ),
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
@@ -239,28 +253,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  Column(
-                    children: <Widget>[
-                      const Text(
-                        '-VEYA-',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        'Şununla giriş yap',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5.0,
-                      ),
-                      otherLoginMethods()
-                    ],
-                  )
+                  // Column(
+                  //   children: <Widget>[
+                  //     const Text(
+                  //       '-VEYA-',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     const Text(
+                  //       'Şununla giriş yap',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     const SizedBox(
+                  //       height: 5.0,
+                  //     ),
+                  //     otherLoginMethods()
+                  //   ],
+                  // ),
                 ],
               ),
             ),

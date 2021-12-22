@@ -1,4 +1,5 @@
-import 'dart:io';
+// ignore_for_file: prefer_const_constructors, annotate_overrides, unused_local_variable, duplicate_ignore, must_be_immutable, use_key_in_widget_constructors, unnecessary_brace_in_string_interps, avoid_print
+
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gelberaberolsun/data/post_json.dart';
 import 'package:gelberaberolsun/screens/denemeNotificationPage.dart';
-import 'package:gelberaberolsun/screens/direct_message_main.dart';
 import 'package:gelberaberolsun/services/Auth.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -64,19 +64,14 @@ class _MainPageState extends State<MainPage> {
               const SizedBox(
                 width: 10,
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.message,
-                  size: 35,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotificationPage()));
-                },
-              ),
+              // IconButton(
+              //   icon: Icon(
+              //     Icons.notifications,
+              //     size: 35,
+              //     color: Colors.black,
+              //   ),
+              //   onPressed: () {},
+              // ),
               const SizedBox(
                 width: 10,
               ),
@@ -144,7 +139,11 @@ class _MainPageState extends State<MainPage> {
               ),
               IconButton(
                 onPressed: () {
-                  //Bildirim ekranına gidecek.
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          // ignore: prefer_const_constructors
+                          builder: (context) => NotificationPage()));
                 },
                 icon: const Icon(
                   Icons.notifications,
@@ -152,6 +151,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
               IconButton(
+                  // ignore: prefer_const_constructors
                   icon: Icon(
                     Icons.login_rounded,
                     color: Colors.black,
@@ -250,47 +250,21 @@ class MyColumn2 extends StatelessWidget {
           itemCount: requestList.length,
           itemBuilder: (context, index) {
             ///Olusturulma tarihine göre sıralama işlemi.En son oluşturulan en üstte çıkacak.
-            requestList.sort((a, b) {
-              Map<String, dynamic> map1 = a.data();
-              Map<String, dynamic> map2 = b.data();
-
-              if ((map1["olusturma tarihi"]
-                      .compareTo(map2["olusturma tarihi"]) <
-                  0)) {
-                return 1;
-              } else {
-                return -1;
-              }
-            });
-            /*userList.sort((a, b) {
-              Map<String, dynamic> map1 = a.data();
-              Map<String, dynamic> map2 = b.data();
-
-              if ((map1["olusturma tarihi"]
-                      .compareTo(map2["olusturma tarihi"]) <
-                  0)) {
-                return 1;
-              } else {
-                return -1;
-              }
-            });*/
+            sortListsMethod();
 
             Map<String, dynamic> requetsMap = requestList[index].data();
             String uid = requetsMap["uid"];
-            String requestCreaterName = requetsMap["name"];
-
             Map<String, dynamic> usersMap = userList[index].data();
-            // String photoURL = "";
+            String photoURL = "";
 
-            // //Provider.of<Auth>(context,listen: false).getUserPhotoByUid(uid,photoURL).toString();
-
-            // for (var i = 0; i < userList.length; i++) {
-            //   Map<String, dynamic> usersMap = userList[i].data();
-            //   if (usersMap["id"] == uid) {
-            //     photoURL = usersMap["photoUrl"];
-            //     //break;
-            //   }
-            // }
+            for (var i = 0; i < userList.length; i++) {
+              Map<String, dynamic> usersMap = userList[i].data();
+              if (usersMap["id"] == uid) {
+                photoURL = usersMap["photoUrl"];
+                print("url:${photoURL}");
+                break;
+              }
+            }
 
             User user =
                 Provider.of<Auth>(context, listen: false).getCurrentUser();
@@ -303,51 +277,12 @@ class MyColumn2 extends StatelessWidget {
 
                 ///onDoubleTap yapınca istek gönderme işlemi yapılsın.
                 onDoubleTap: () async {
-                  if (requetsMap["uid"] != user.uid) {
-                    showAlertDialog(context, () async {
-                      await Provider.of<Auth>(context, listen: false)
-                          .sendRequestNotificationToUser(uid);
-
-                      Navigator.pop(context);
-                    },
-                        Text("İstek Gönderme"),
-                        Text(
-                            "Bu kişiye istek göndermek istediğinize emin misiniz?"));
-                  }
+                  await sendRequestToOtherUserMethod(
+                      requetsMap, user, context, uid);
                 },
                 onLongPress: () async {
                   //silme işlemi için
-                  if (requetsMap["uid"] == user.uid) {
-                    showAlertDialog(context, () async {
-                      try {
-                        await Provider.of<Auth>(context, listen: false)
-                            .documentDelete(user.uid);
-
-                        Navigator.pop(context);
-                      } catch (e) {
-                        Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Text(
-                                    "Bir Hata Meydana Geldi Lütfen Daha Sonra Tekrar Deneyin!"),
-                                actions: [
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("Anladım."))
-                                ],
-                              );
-                            });
-                      }
-                    },
-                        Text("Silme İşlemi"),
-                        Text(
-                            "Bu işlemi onaylarsanız geri alamazsınız.Silmek istediğinize emin misiniz?"));
-                    // await Provider.of<Auth>(context,listen: false).documentDelete(user.uid);
-                  }
+                  await deleteRequest(requetsMap, user, context);
                 },
                 child: Stack(
                   children: [
@@ -397,10 +332,12 @@ class MyColumn2 extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
+                                    // ignore: prefer_const_constructors
                                     CircleAvatar(
                                         // backgroundImage:
                                         //     usersMap["photoUrl"] != null
-                                        //         ? FileImage(File(photoURL))
+                                        //         ? FileImage(
+                                        //             File(usersMap["photoUrl"]))
                                         //         : null,
                                         ),
                                     const SizedBox(
@@ -464,16 +401,16 @@ class MyColumn2 extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       ///Mesaj sayfasına yönlendiren kod
-                                      /*if (requetsMap["uid"] != user.uid) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                      kullaniciName:
-                                                          usersMap["name"],
-                                                      uid: usersMap["id"],
-                                                    )));
-                                      }*/
+                                      // if (requetsMap["uid"] != user.uid) {
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder: (context) => ChatPage(
+                                      //                 kullaniciName:
+                                      //                     usersMap["name"],
+                                      //                 uid: usersMap["id"],
+                                      //               )));
+                                      // }
                                     }),
                               ],
                             ),
@@ -503,6 +440,77 @@ class MyColumn2 extends StatelessWidget {
             );
           }),
     );
+  }
+
+  Future sendRequestToOtherUserMethod(Map<String, dynamic> requetsMap,
+      User user, BuildContext context, String uid) async {
+    if (requetsMap["uid"] != user.uid) {
+      showAlertDialog(context, () async {
+        await Provider.of<Auth>(context, listen: false)
+            .sendRequestNotificationToUser(uid);
+
+        Navigator.pop(context);
+      }, Text("İstek Gönderme"),
+          Text("Bu kişiye istek göndermek istediğinize emin misiniz?"));
+    }
+  }
+
+  void sortListsMethod() {
+    requestList.sort((a, b) {
+      Map<String, dynamic> map1 = a.data();
+      Map<String, dynamic> map2 = b.data();
+
+      if ((map1["olusturma tarihi"].compareTo(map2["olusturma tarihi"]) < 0)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    userList.sort((a, b) {
+      Map<String, dynamic> map1 = a.data();
+      Map<String, dynamic> map2 = b.data();
+
+      if ((map1["olusturma tarihi"].compareTo(map2["olusturma tarihi"]) < 0)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  }
+
+  Future deleteRequest(
+      Map<String, dynamic> requetsMap, User user, BuildContext context) async {
+    if (requetsMap["uid"] == user.uid) {
+      showAlertDialog(context, () async {
+        try {
+          await Provider.of<Auth>(context, listen: false)
+              .documentDelete(user.uid);
+
+          Navigator.pop(context);
+        } catch (e) {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(
+                      "Bir Hata Meydana Geldi Lütfen Daha Sonra Tekrar Deneyin!"),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Anladım."))
+                  ],
+                );
+              });
+        }
+      },
+          Text("Silme İşlemi"),
+          Text(
+              "Bu işlemi onaylarsanız geri alamazsınız.Silmek istediğinize emin misiniz?"));
+      // await Provider.of<Auth>(context,listen: false).documentDelete(user.uid);
+    }
   }
 
   void showAlertDialog(context, Function function, Text title, Text content) {
