@@ -2,6 +2,8 @@
 
 Gel Beraber Olsun, kafe ve restoran gibi yerlerde yalnız başına olmak istemeyen ve yeni insanlarla tanışmak isteyen kişileri bir çatı altında toplayan bir sosyal ağ projesidir.
 
+# İstanbul Üniversitesi - Cerrahpaşa Bilgisayar Mühendisliği Mobil Programlama dersi için yapılmaya başlanmış bir projedir.
+
 # Documentation
 
 
